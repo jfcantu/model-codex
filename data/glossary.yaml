@@ -89,8 +89,11 @@
   definition: >
     The number of learned weights in a model, counted in billions — "8B" means
     8 billion. Bigger models are generally higher quality but need more VRAM and
-    run slower.
-  seeAlso: [Model]
+    run slower. Watch out: different-size builds of the "same" model are usually
+    distinct models, not drop-in swaps — they can need different companion files.
+    Flux.2 [klein] 4B uses the Qwen3-4B text encoder while the 9B uses Qwen3-8B,
+    and the Wan 2.2 5B and 14B use different VAEs; their files don't interchange.
+  seeAlso: [Model, Text encoder, VAE]
 
 - term: Sampler
   definition: >
