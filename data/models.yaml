@@ -190,13 +190,34 @@
   description: The open-weight 32B Flux.2 checkpoint.
   # inherits Flux.2 requirements & settings
 
-- id: flux2-klein
-  name: Flux.2 [klein]
+- id: flux2-klein-4b
+  name: Flux.2 [klein] 4B
   basedOn: flux2
   releaseYear: 2025
-  description: An Apache-2.0, size-distilled Flux.2 for faster iteration.
+  description: >
+    An Apache-2.0, size-distilled Flux.2 for faster iteration. Unlike the base
+    Flux.2 line, Klein swaps the Mistral encoder for a Qwen3 text model — the 4B
+    build uses Qwen3-4B.
   tags: [distilled]
-  # inherits Flux.2 requirements & settings
+  requires: # overrides Flux.2: different text encoder, same VAE
+    - component: qwen3-4b
+      role: text encoder
+    - component: flux2-vae
+      role: vae
+
+- id: flux2-klein-9b
+  name: Flux.2 [klein] 9B
+  basedOn: flux2
+  releaseYear: 2025
+  description: >
+    The larger size-distilled Flux.2 Klein (Apache-2.0). Like the 4B build it
+    uses a Qwen3 text encoder instead of Mistral, but the bigger Qwen3-8B.
+  tags: [distilled]
+  requires: # overrides Flux.2: different text encoder, same VAE
+    - component: qwen3-8b
+      role: text encoder
+    - component: flux2-vae
+      role: vae
 
 # ============================ Other roots (for VAE context) ============================
 - id: qwen-image

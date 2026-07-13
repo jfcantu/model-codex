@@ -67,16 +67,25 @@
   family: LLM
   origin: Alibaba / Qwen
   description: >
-    The 4B Qwen3 text model used by Z-Image. A plain text LLM, distinct from
-    Qwen-Image's Qwen2.5-VL vision-language encoder.
+    The 4B Qwen3 text model used by Z-Image and Flux.2 [klein] 4B. A plain text
+    LLM, distinct from Qwen-Image's Qwen2.5-VL vision-language encoder.
+
+- id: qwen3-8b
+  name: Qwen3-8B
+  family: LLM
+  origin: Alibaba / Qwen
+  description: >
+    The 8B Qwen3 text model used by Flux.2 [klein] 9B. A plain text LLM — the
+    larger sibling of the Qwen3-4B used by the 4B Klein and Z-Image.
 
 - id: mistral-3
   name: Mistral Small 3.1
   family: LLM
   origin: Mistral AI
   description: >
-    A 24B vision-language model — Flux.2's single text encoder, replacing
-    Flux.1's CLIP-L + T5-XXL pair.
+    A 24B vision-language model — the text encoder for Flux.2 [dev] and the
+    Flux.2 base line, replacing Flux.1's CLIP-L + T5-XXL pair. (The distilled
+    Flux.2 [klein] models use Qwen3 instead.)
 
 - id: llava-llama3
   name: LLaVA-Llama-3-8B
