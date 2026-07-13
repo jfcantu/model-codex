@@ -48,10 +48,9 @@
     Scheduler: normal
     Steps: "25"
     CFG: "7"
-    CLIP skip: "2"
   notes:
     - >-
-      Needs CLIP skip 2 and "score" quality tags (e.g. score_9, score_8_up) in
+      Needs "score" quality tags (e.g. score_9, score_8_up) in
       the prompt, or output looks muddy.
   # inherits SDXL requirements (CLIP-L + CLIP-G + SDXL VAE)
 
