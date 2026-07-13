@@ -277,6 +277,11 @@
     Steps: "30"
     CFG: "6"
     Shift: "8.0"
+  notes:
+    - >-
+      VAE gotcha: the separate "Wan 2.2 VAE" is NOT a drop-in upgrade — it only
+      fits the Wan 2.2 5B (TI2V) model. This model, and the 14B Wan 2.2 models,
+      use the Wan 2.1 VAE.
 
 - id: wan22
   name: Wan 2.2
@@ -303,6 +308,10 @@
     Shift: "8.0"
   notes:
     - >-
+      VAE gotcha: despite the shared "Wan 2.2" name, these 14B models use the Wan
+      2.1 VAE — NOT the "Wan 2.2 VAE". The Wan 2.2 VAE is higher-compression and
+      fits ONLY the 5B (TI2V) model; loading it here will not work.
+    - >-
       The 14B models run as two KSampler stages — the high-noise expert first,
       then the low-noise expert.
 
@@ -326,6 +335,11 @@
     Scheduler: simple
     Steps: "20"
     CFG: "5"
+  notes:
+    - >-
+      VAE gotcha: the "Wan 2.2 VAE" this 5B model uses is specific to it — it is
+      NOT interchangeable with the 14B Wan 2.2 models or Wan 2.1, which all use
+      the Wan 2.1 VAE.
 
 # ============================ Stable Diffusion 1.x family ============================
 - id: sd15
