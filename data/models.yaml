@@ -1,0 +1,454 @@
+# Every model is a node; `basedOn` points at the model it was built on (roots
+# omit it). Set `modifiesArchitecture: true` on a model that changes its parent's
+# internals (like Chroma) to flag the "Heads up" caveat.
+#
+# `requires` lists the text encoders / VAE a model needs. If a node omits it, it
+# INHERITS the resolved requirements of its nearest ancestor. If a node declares
+# `requires`, that list fully REPLACES the inherited set (see Chroma dropping
+# CLIP-L relative to Flux.1).
+
+# ============================ SDXL family ============================
+- id: sdxl
+  name: SDXL
+  aliases: [Stable Diffusion XL]
+  family: Stable Diffusion
+  releasedBy: Stability AI
+  releaseYear: 2023
+  description: >
+    Stable Diffusion XL. Needs two text encoders (CLIP-L and CLIP-G) plus its
+    own VAE. The starting point for a huge number of anime and photoreal models.
+  tags: [foundation]
+  links:
+    - label: HuggingFace
+      url: https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0
+  requires:
+    - component: clip-l
+      role: text encoder (primary)
+    - component: clip-g
+      role: text encoder (secondary)
+    - component: sdxl-vae
+      role: vae
+  sampling:
+    Sampler: dpmpp_2m
+    Scheduler: karras
+    Steps: "25-30"
+    CFG: "7"
+
+- id: pony-v6
+  name: Pony Diffusion V6 XL
+  aliases: [PonyXL, Pony V6]
+  basedOn: sdxl
+  releaseYear: 2024
+  description: >
+    A heavily-retrained SDXL model. Architecturally SDXL, but its conditioning
+    is different enough that many "plain SDXL" LoRAs do not transfer to it.
+  tags: [anime, character]
+  sampling:
+    Sampler: euler_ancestral
+    Scheduler: normal
+    Steps: "25"
+    CFG: "7"
+    CLIP skip: "2"
+  notes:
+    - >-
+      Needs CLIP skip 2 and "score" quality tags (e.g. score_9, score_8_up) in
+      the prompt, or output looks muddy.
+  # inherits SDXL requirements (CLIP-L + CLIP-G + SDXL VAE)
+
+- id: illustrious
+  name: Illustrious-XL
+  basedOn: sdxl
+  releaseYear: 2024
+  description: >
+    An SDXL-based anime model that became a base for many further finetunes.
+  tags: [anime]
+  # inherits SDXL requirements
+
+- id: noobxl
+  name: NoobAI-XL (NoobXL)
+  basedOn: illustrious
+  releaseYear: 2024
+  description: >
+    A popular finetune built on Illustrious-XL. Shares the SDXL architecture
+    and the same required files.
+  tags: [anime]
+  # inherits (via Illustrious) SDXL requirements
+
+# ============================ Flux.1 family ============================
+- id: flux1
+  name: Flux.1
+  family: Flux
+  releasedBy: Black Forest Labs
+  releaseYear: 2024
+  description: >
+    A newer, larger image model from Black Forest Labs. Needs two text encoders
+    (CLIP-L and T5-XXL) and its own VAE.
+  tags: [foundation]
+  links:
+    - label: Black Forest Labs
+      url: https://blackforestlabs.ai/
+  requires:
+    - component: clip-l
+      role: text encoder (secondary)
+    - component: t5xxl
+      role: text encoder (primary)
+    - component: flux-vae
+      role: vae
+  sampling:
+    Sampler: euler
+    Scheduler: simple
+    Steps: "20"
+    CFG: "1"
+    FluxGuidance: "3.5"
+
+- id: flux1-dev
+  name: Flux.1 [dev]
+  aliases: [Flux.1D, Flux Dev]
+  basedOn: flux1
+  releaseYear: 2024
+  description: The guidance-distilled open-weight Flux.1 checkpoint.
+  # inherits Flux.1 requirements
+
+- id: flux1-schnell
+  name: Flux.1 [schnell]
+  aliases: [Flux.1S, Flux Schnell]
+  basedOn: flux1
+  releaseYear: 2024
+  description: The timestep-distilled, fast, Apache-licensed Flux.1 checkpoint.
+  sampling:
+    Sampler: euler
+    Scheduler: simple
+    Steps: "4"
+    CFG: "1"
+  # inherits Flux.1 requirements
+
+- id: flux1-krea-dev
+  name: Flux.1 Krea [dev]
+  basedOn: flux1-dev
+  releaseYear: 2025
+  description: >
+    A Flux.1 [dev] derivative developed with Krea, tuned for a more natural,
+    less "AI-looking" aesthetic. (Referred to as "Krea2" in some communities.)
+  aliases: [Krea2, Krea]
+  tags: [photoreal]
+  # inherits Flux.1 requirements; VAE alternatives noted in compatibilities.yaml
+
+- id: chroma
+  name: Chroma
+  basedOn: flux1-schnell
+  modifiesArchitecture: true
+  releaseYear: 2025
+  description: >
+    A modified version of Flux.1 [schnell]. It drops the CLIP-L text encoder and
+    runs on T5-XXL alone, plus the Flux.1 VAE.
+  tags: [distilled]
+  # Full override: DROPS CLIP-L relative to Flux.1.
+  requires:
+    - component: t5xxl
+      role: text encoder (only)
+    - component: flux-vae
+      role: vae
+  sampling:
+    Sampler: euler
+    Scheduler: beta
+    Steps: "26"
+    CFG: "4"
+  notes:
+    - >-
+      Tensor/architecture changes relative to Flux.1 mean many ComfyUI nodes
+      written for Flux will not work with Chroma without Chroma-specific support.
+    - >-
+      Unlike Flux, Chroma restores real CFG and uses negative prompts.
+
+# ============================ Flux.2 family ============================
+- id: flux2
+  name: Flux.2
+  family: Flux
+  releasedBy: Black Forest Labs
+  releaseYear: 2025
+  description: >
+    Black Forest Labs' successor to Flux.1. Drops the CLIP-L + T5-XXL pair for a
+    single Mistral vision-language encoder and uses its own new VAE — so Flux.1
+    encoders, VAEs and LoRAs do not carry over.
+  tags: [foundation]
+  requires:
+    - component: mistral-3
+      role: text encoder
+    - component: flux2-vae
+      role: vae
+  sampling:
+    Sampler: euler
+    Scheduler: simple
+    Steps: "28-50"
+    Guidance: "4"
+
+- id: flux2-dev
+  name: Flux.2 [dev]
+  aliases: [Flux.2D]
+  basedOn: flux2
+  releaseYear: 2025
+  description: The open-weight 32B Flux.2 checkpoint.
+  # inherits Flux.2 requirements & settings
+
+- id: flux2-klein
+  name: Flux.2 [klein]
+  basedOn: flux2
+  releaseYear: 2025
+  description: An Apache-2.0, size-distilled Flux.2 for faster iteration.
+  tags: [distilled]
+  # inherits Flux.2 requirements & settings
+
+# ============================ Other roots (for VAE context) ============================
+- id: qwen-image
+  name: Qwen-Image
+  aliases: [Qwen Image]
+  family: Qwen
+  releasedBy: Alibaba (Qwen)
+  releaseYear: 2025
+  description: >
+    Alibaba's Qwen-Image text-to-image model. Uses a Qwen2.5-VL text encoder
+    and its own VAE.
+  tags: [foundation]
+  requires:
+    - component: qwen25-vl
+      role: text encoder
+    - component: qwen-image-vae
+      role: vae
+  sampling:
+    Sampler: euler
+    Scheduler: simple
+    Steps: "20"
+    CFG: "2.5"
+    Shift: "3.1"
+  notes:
+    - >-
+      "Qwen2.5" / "Qwen3" in a filename refer to the Qwen language model used as
+      the TEXT ENCODER, not the image model's version — Qwen-Image uses
+      Qwen2.5-VL, while the newer Z-Image uses Qwen3.
+    - >-
+      Date suffixes like Qwen-Image-2512 or Edit-2509 are year-month codes for
+      open-weights refreshes (2512 = Dec 2025) — same architecture, newer weights.
+    - >-
+      "Qwen-Image 2.0" (Feb 2026) is a separate next-generation model, but it's
+      API-only — there's no downloadable checkpoint, so it doesn't run in ComfyUI
+      like the ones here.
+    - >-
+      The popular distilled / Lightning builds run in ~8 steps at CFG 1 instead.
+
+- id: wan21
+  name: Wan 2.1
+  aliases: [Wan2.1, Wan]
+  family: Wan
+  releasedBy: Alibaba (Wan)
+  releaseYear: 2025
+  description: >
+    Alibaba's Wan 2.1 video generation model. Uses a UMT5-XXL text encoder; its
+    VAE is sometimes reused by image models as an alternative autoencoder.
+  tags: [foundation, video]
+  requires:
+    - component: umt5-xxl
+      role: text encoder
+    - component: wan21-vae
+      role: vae
+  sampling:
+    Sampler: uni_pc
+    Scheduler: simple
+    Steps: "30"
+    CFG: "6"
+    Shift: "8.0"
+
+- id: wan22
+  name: Wan 2.2
+  aliases: [Wan2.2]
+  family: Wan
+  releasedBy: Alibaba (Wan)
+  releaseYear: 2025
+  description: >
+    Wan 2.1's successor — a new architecture (the 14B text/image-to-video models
+    are Mixture-of-Experts, with a high-noise expert for layout/motion and a
+    low-noise expert for detail), not a finetune of 2.1. It reuses the Wan 2.1
+    VAE and UMT5-XXL encoder.
+  tags: [foundation, video]
+  requires:
+    - component: umt5-xxl
+      role: text encoder
+    - component: wan21-vae
+      role: vae
+  sampling:
+    Sampler: euler
+    Scheduler: simple
+    Steps: "20"
+    CFG: "3.5"
+    Shift: "8.0"
+  notes:
+    - >-
+      The 14B models run as two KSampler stages — the high-noise expert first,
+      then the low-noise expert.
+
+- id: wan22-ti2v
+  name: Wan 2.2 TI2V (5B)
+  family: Wan
+  releasedBy: Alibaba (Wan)
+  releaseYear: 2025
+  description: >
+    The compact 5B unified Wan 2.2 model — a separate model in the 2.2 release,
+    not built on the 14B. Uses a new higher-compression VAE instead of the Wan
+    2.1 one.
+  tags: [foundation, video]
+  requires:
+    - component: umt5-xxl
+      role: text encoder
+    - component: wan22-vae
+      role: vae
+  sampling:
+    Sampler: uni_pc
+    Scheduler: simple
+    Steps: "20"
+    CFG: "5"
+
+# ============================ Stable Diffusion 1.x family ============================
+- id: sd15
+  name: Stable Diffusion 1.5
+  aliases: [SD1.5, "SD 1.5"]
+  family: Stable Diffusion
+  releasedBy: Runway / Stability AI
+  releaseYear: 2022
+  description: >
+    The classic Stable Diffusion. A single CLIP-L text encoder and a 4-channel
+    VAE. Still the base of an enormous library of community finetunes.
+  tags: [foundation]
+  requires:
+    - component: clip-l
+      role: text encoder
+    - component: sd15-vae
+      role: vae
+  sampling:
+    Sampler: euler_ancestral
+    Scheduler: normal
+    Steps: "20-30"
+    CFG: "7"
+
+# ============================ Stable Diffusion 3.5 family ============================
+- id: sd35
+  name: Stable Diffusion 3.5
+  aliases: [SD3.5, "SD 3.5"]
+  family: Stable Diffusion
+  releasedBy: Stability AI
+  releaseYear: 2024
+  description: >
+    A rectified-flow architecture using THREE text encoders (CLIP-L, CLIP-G, and
+    T5-XXL) and a 16-channel VAE.
+  tags: [foundation]
+  requires:
+    - component: clip-l
+      role: text encoder
+    - component: clip-g
+      role: text encoder
+    - component: t5xxl
+      role: text encoder
+    - component: sd35-vae
+      role: vae
+  sampling:
+    Sampler: euler
+    Scheduler: sgm_uniform
+    Steps: "30-40"
+    CFG: "4.5"
+    Shift: "3.0"
+
+- id: sd35-large
+  name: SD 3.5 Large
+  basedOn: sd35
+  releaseYear: 2024
+  description: The 8B-parameter flagship SD 3.5 checkpoint.
+
+- id: sd35-medium
+  name: SD 3.5 Medium
+  basedOn: sd35
+  releaseYear: 2024
+  description: The smaller, lower-VRAM SD 3.5 checkpoint.
+
+- id: sd35-large-turbo
+  name: SD 3.5 Large Turbo
+  basedOn: sd35-large
+  releaseYear: 2024
+  description: A distilled, few-step version of SD 3.5 Large.
+  tags: [distilled]
+  sampling:
+    Sampler: euler
+    Scheduler: sgm_uniform
+    Steps: "4"
+    CFG: "1.2"
+    Shift: "3.0"
+
+# ============================ Video models ============================
+- id: hunyuan-video
+  name: HunyuanVideo
+  aliases: [Hunyuan Video]
+  family: Hunyuan
+  releasedBy: Tencent
+  releaseYear: 2024
+  description: >
+    Tencent's HunyuanVideo. A dual-encoder video model using a LLaVA-Llama-3 LLM
+    together with CLIP-L, plus its own 3D video VAE.
+  tags: [foundation, video]
+  requires:
+    - component: llava-llama3
+      role: text encoder (primary)
+    - component: clip-l
+      role: text encoder
+    - component: hunyuan-video-vae
+      role: vae
+  sampling:
+    Sampler: euler
+    Scheduler: simple
+    Steps: "20"
+    CFG: "1"
+    Guidance: "6.0"
+    Shift: "7"
+
+- id: ltx-video
+  name: LTX-Video
+  aliases: [LTXV, LTX]
+  family: LTX
+  releasedBy: Lightricks
+  releaseYear: 2024
+  description: >
+    Lightricks' LTX-Video (LTXV). A fast video model conditioned on a single
+    T5-XXL text encoder, with its own 3D video VAE.
+  tags: [foundation, video]
+  requires:
+    - component: t5xxl
+      role: text encoder
+    - component: ltx-video-vae
+      role: vae
+  sampling:
+    Sampler: euler
+    Scheduler: normal
+    Steps: "25"
+    CFG: "3"
+  notes:
+    - >-
+      In the classic 0.9.x checkpoint the VAE is bundled in (no separate
+      download); LTX 2.x ships it as a separate file.
+
+# ============================ Z-Image ============================
+- id: z-image
+  name: Z-Image
+  aliases: [Z-Image Turbo]
+  releasedBy: Alibaba (Tongyi)
+  releaseYear: 2025
+  description: >
+    Alibaba Tongyi's Z-Image — a compact 6B single-stream DiT. Uses a Qwen3-4B
+    text encoder and reuses the Flux.1 VAE. The released flagship is the
+    distilled Z-Image-Turbo (~8 steps).
+  tags: [foundation, distilled]
+  requires:
+    - component: qwen3-4b
+      role: text encoder
+    - component: flux-vae
+      role: vae
+  sampling:
+    Sampler: res_multistep
+    Scheduler: simple
+    Steps: "8"
+    CFG: "1"

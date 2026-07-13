@@ -1,0 +1,52 @@
+# Compatibility EXCEPTIONS and ADDITIONS only — NOT an exhaustive matrix.
+#
+# The checker already assumes sensible defaults, and models inherit them from
+# what they're built on:
+#   - a model natively works with the text encoders and VAE it requires
+#   - a LoRA usually transfers within a family, but not across architectures
+#   - nodes written for an architecture work on that architecture
+#
+# Record something here ONLY where reality differs from those defaults:
+#   - ADDITION:  something extra that works  (e.g. "Krea can also use the Wan VAE")
+#   - EXCEPTION: something expected that doesn't (e.g. "many Flux nodes fail on Chroma")
+# An edge recorded on a model also applies to models built on it, unless one of
+# them records its own edge for the same pair.
+#
+# CONVENTION: subject = the host model (what you're running); object = the part
+# used with it — a component (text encoder / VAE), or the family a LoRA / node
+# was built for. Read an edge as "using <object> with <subject> is <status>".
+# status:     compatible | likely | partial | incompatible
+# relation:   can-use-vae, can-use-text-encoder, lora-transfer, node-support
+
+# ---- ADDITIONS: alternative VAEs for Flux.1 Krea ("Krea2") ----
+# Beyond the Flux.1 VAE it inherits, Krea reportedly works with these too.
+- subject: flux1-krea-dev
+  object: qwen-image-vae
+  relation: can-use-vae
+  status: compatible
+  notes: Reported usable as an alternative VAE. From project brief — verify.
+
+- subject: flux1-krea-dev
+  object: wan21-vae
+  relation: can-use-vae
+  status: compatible
+  notes: Reported usable as an alternative VAE. From project brief — verify.
+
+# ---- EXCEPTION: LoRAs transfer worse to Pony than the same-family default ----
+# host = Pony, part = an SDXL LoRA.
+- subject: pony-v6
+  object: sdxl
+  relation: lora-transfer
+  status: partial
+  notes: >-
+    Plain-SDXL LoRAs frequently underperform or break on Pony due to its very
+    different conditioning, despite the shared architecture.
+
+# ---- EXCEPTION: Chroma breaks Flux tooling despite being Flux-based ----
+- subject: chroma
+  object: flux1
+  relation: node-support
+  status: partial
+  notes: >-
+    Chroma is based on Flux.1 but many ComfyUI Flux nodes fail on it due to
+    tensor/architecture changes; use Chroma-aware nodes.

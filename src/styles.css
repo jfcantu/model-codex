@@ -1,0 +1,878 @@
+:root {
+  --bg: #0e1116;
+  --bg-elev: #171b22;
+  --bg-elev-2: #1e232c;
+  --border: #2a313c;
+  --border-strong: #3a4350;
+  --text: #e6e9ee;
+  --text-dim: #9aa4b2;
+  --text-faint: #6b7482;
+  --accent: #6ea8fe;
+  --accent-dim: #33507d;
+
+  --status-compatible: #3fb950;
+  --status-likely: #58a6ff;
+  --status-partial: #d29922;
+  --status-incompatible: #f85149;
+
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+code {
+  background: var(--bg-elev-2);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* ---- layout ---- */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.85rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elev);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-wrap: wrap;
+}
+.brand {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text);
+}
+.brand:hover {
+  text-decoration: none;
+}
+.brand-mark {
+  color: var(--accent);
+}
+.mainnav {
+  display: flex;
+  gap: 1.25rem;
+}
+.mainnav a {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  padding: 0.2rem 0;
+  border-bottom: 2px solid transparent;
+}
+.mainnav a:hover {
+  color: var(--text);
+  text-decoration: none;
+}
+.mainnav a.active {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+.content {
+  flex: 1;
+  width: 100%;
+  /* A single comfortable column: text and structure share one width, rather
+     than constraining prose inside a much wider page. */
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 1.75rem 1.5rem 3rem;
+}
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 1.25rem 1.5rem;
+  color: var(--text-faint);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* ---- headings ---- */
+.page-head h1 {
+  margin: 0 0 0.35rem;
+  font-size: 1.7rem;
+}
+.lede {
+  color: var(--text-dim);
+  margin: 0 0 1.4rem;
+}
+h2 {
+  font-size: 1.2rem;
+  margin: 1.8rem 0 0.7rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--border);
+}
+h4 {
+  margin: 0 0 0.4rem;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ---- search & chips ---- */
+.search {
+  width: 100%;
+  max-width: 420px;
+  padding: 0.6rem 0.8rem;
+  background: var(--bg-elev);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+.search:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.chip {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.chip:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+/* ---- tags ---- */
+.tags {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+.tag {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  background: var(--bg-elev-2);
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+}
+
+/* ---- detail ---- */
+.breadcrumb {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 0.8rem;
+}
+.breadcrumb .sep {
+  margin: 0 0.4rem;
+  color: var(--text-faint);
+}
+.crumb-current {
+  color: var(--text);
+  font-weight: 600;
+}
+.detail-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.detail-head h1 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+.meta-row {
+  color: var(--text-faint);
+  font-size: 0.88rem;
+  margin: 0.35rem 0 0.9rem;
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.detail-desc {
+  color: var(--text);
+}
+.callout {
+  background: rgba(240, 136, 62, 0.08);
+  border: 1px solid rgba(240, 136, 62, 0.35);
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  margin: 1.1rem 0;
+}
+.callout h4 {
+  color: #f0883e;
+  margin-bottom: 0.3rem;
+}
+.callout ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+.callout p {
+  margin: 0.2rem 0 0;
+}
+.inherited-note {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin-top: 0;
+}
+
+/* ---- tables & lists ---- */
+.req-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.req-table th,
+.req-table td {
+  text-align: left;
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--border);
+}
+.req-table th {
+  color: var(--text-faint);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+/* suggested sampler settings: label | value rows */
+.settings-table {
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.settings-table th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-dim);
+  padding: 0.3rem 1.5rem 0.3rem 0;
+  white-space: nowrap;
+  vertical-align: top;
+}
+.settings-table td {
+  padding: 0.3rem 0;
+  font-family: ui-monospace, monospace;
+  color: var(--text);
+}
+.settings-caveat {
+  font-size: 0.82rem;
+  margin-top: 0.5rem;
+}
+
+.lineage-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+ul.plain {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+ul.plain li {
+  padding: 0.2rem 0;
+}
+.muted {
+  color: var(--text-faint);
+}
+.empty {
+  color: var(--text-faint);
+}
+
+/* ---- model tree (node-link diagram) ---- */
+.tree-scroll {
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-elev);
+  padding: 0.5rem;
+}
+.tree-svg {
+  display: block;
+}
+.tree-link {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+}
+.tree-node {
+  cursor: pointer;
+}
+.tree-rect {
+  fill: var(--bg-elev-2);
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+}
+.tree-node:hover .tree-rect {
+  stroke: var(--accent);
+}
+.tree-label {
+  fill: var(--text);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* ---- quickstart ---- */
+.hero {
+  padding: 1rem 0 0.5rem;
+}
+.hero h1 {
+  font-size: 2.4rem;
+  margin: 0 0 0.6rem;
+}
+.hero-lede {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+}
+.journey-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.9rem;
+}
+.journey-card {
+  display: block;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.1rem 1.2rem;
+  color: var(--text);
+}
+.journey-card:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+  transform: translateY(-1px);
+  transition: transform 0.08s ease;
+}
+.journey-emoji {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.journey-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  color: var(--accent);
+}
+.journey-card p {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+.basics {
+  margin: 0;
+}
+.basic {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.basic dt {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.15rem;
+}
+.basic dd {
+  margin: 0;
+  color: var(--text-dim);
+}
+.fn-ref {
+  color: var(--accent);
+  font-weight: 600;
+  margin-left: 1px;
+}
+.footnote {
+  color: var(--text-faint);
+  font-size: 0.82rem;
+  margin: 0.7rem 0 0;
+}
+.footnote sup {
+  color: var(--accent);
+  margin-right: 0.15rem;
+}
+.counts {
+  color: var(--text-dim);
+}
+.counts strong {
+  color: var(--accent);
+}
+
+/* ---- tabs ---- */
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 1px solid var(--border);
+  margin: 0.5rem 0 1.1rem;
+  flex-wrap: wrap;
+}
+.tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-dim);
+  padding: 0.5rem 0.85rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+.tab:hover {
+  color: var(--text);
+}
+.tab.on {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+/* ---- tree legend ---- */
+.tree-legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.7rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* ---- browse ---- */
+.section-note {
+  color: var(--text-dim);
+  margin: 0 0 0.9rem;
+  font-size: 0.92rem;
+}
+.family-group {
+  margin-bottom: 1.4rem;
+}
+/* brand-family header (Stable Diffusion, Flux, Wan, …) grouping its roots */
+.family-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+  margin: 0.6rem 0 0.4rem;
+  padding-left: 0.5rem;
+  border-left: 3px solid var(--border-strong);
+}
+.row-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.row-list li {
+  padding: 0;
+}
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  color: var(--text);
+  /* button reset (rows are buttons that open the drawer) */
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+}
+.row:hover {
+  background: var(--bg-elev);
+  text-decoration: none;
+}
+.row-name {
+  font-weight: 600;
+}
+.row-sub {
+  color: var(--text-faint);
+  font-size: 0.85rem;
+}
+/* interchangeable variant nested under its base */
+.variant-row .row {
+  padding-left: 1.9rem;
+}
+.variant-row .row-name {
+  font-weight: 400;
+  color: var(--text-dim);
+}
+.interchange-note {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin: 0.3rem 0 0.9rem;
+}
+
+/* inline link that opens the detail drawer */
+.entity-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: var(--accent);
+  cursor: pointer;
+}
+.entity-link:hover {
+  text-decoration: underline;
+}
+
+/* plain "what kind of file" label on the detail view */
+.type-label {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  background: var(--bg-elev-2);
+  border: 1px solid var(--border);
+  padding: 0.12rem 0.55rem;
+  border-radius: 999px;
+}
+
+/* ---- glossary / term lists ---- */
+.term-list {
+  margin: 0;
+}
+.term {
+  border-bottom: 1px solid var(--border);
+  scroll-margin-top: 5rem;
+}
+.term-summary {
+  font-weight: 700;
+  font-size: 1.02rem;
+  padding: 0.7rem 0;
+  cursor: pointer;
+  list-style: none; /* remove default disclosure triangle */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.term-summary::-webkit-details-marker {
+  display: none;
+}
+/* custom chevron that rotates when the term is open */
+.term-summary::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid var(--text-faint);
+  border-bottom: 2px solid var(--text-faint);
+  transform: rotate(-45deg);
+  transition: transform 0.12s ease;
+  flex: 0 0 auto;
+}
+.term[open] .term-summary::before {
+  transform: rotate(45deg);
+}
+.term-summary:hover {
+  color: var(--accent);
+}
+.term-summary:hover::before {
+  border-color: var(--accent);
+}
+.term-aka {
+  color: var(--text-faint);
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+.term-body {
+  margin: 0 0 0.7rem 1rem;
+  color: var(--text-dim);
+}
+.term-body p {
+  margin: 0.25rem 0;
+}
+.term-examples {
+  font-size: 0.85rem;
+  color: var(--text-faint);
+}
+.term-see {
+  font-size: 0.85rem;
+}
+
+/* ---- compatibility query builder ---- */
+.query-builder {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.2rem 1.3rem;
+  margin-bottom: 1.5rem;
+}
+.query-sentence {
+  font-size: 1.25rem;
+  line-height: 2.4;
+  margin-bottom: 1.2rem;
+}
+.slot {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+/* All the glue words in the query sentence share one style so nothing looks
+   out of place next to the dropdowns. */
+.connective {
+  color: var(--text-dim);
+  font-weight: 400;
+}
+.query-sentence select {
+  background: var(--bg-elev-2);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  padding: 0.25rem 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.query-sentence select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.slot-type {
+  color: var(--accent) !important;
+}
+
+.verdict {
+  border-radius: 10px;
+  border: 1px solid var(--border-strong);
+  border-left-width: 4px;
+  padding: 0.9rem 1.1rem;
+  background: var(--bg);
+}
+.verdict-compatible {
+  border-left-color: var(--status-compatible);
+}
+.verdict-likely {
+  border-left-color: var(--status-likely);
+}
+.verdict-partial {
+  border-left-color: var(--status-partial);
+}
+.verdict-incompatible {
+  border-left-color: var(--status-incompatible);
+}
+.verdict-unknown {
+  border-left-color: var(--text-faint);
+}
+.verdict-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+.answer-word {
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.verdict-compatible .answer-word {
+  color: var(--status-compatible);
+}
+.verdict-likely .answer-word {
+  color: var(--status-likely);
+}
+.verdict-partial .answer-word {
+  color: var(--status-partial);
+}
+.verdict-incompatible .answer-word {
+  color: var(--status-incompatible);
+}
+.verdict-unknown .answer-word {
+  color: var(--text-dim);
+}
+.verdict-question {
+  margin: 0.35rem 0 0.5rem;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+}
+.verdict-reason {
+  margin: 0.5rem 0 0.3rem;
+  color: var(--text);
+  font-size: 1.02rem;
+}
+.verdict-basis {
+  margin: 0;
+  color: var(--text-faint);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 640px) {
+  .lineage-cols {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- detail drawer ---- */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  display: flex;
+  justify-content: flex-end;
+}
+.drawer {
+  position: relative;
+  width: min(560px, 100%);
+  height: 100%;
+  background: var(--bg);
+  border-left: 1px solid var(--border-strong);
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.45);
+  overflow-y: auto;
+  /* translateX only — no opacity change, so the panel is always opaque and
+     never lets the page behind it bleed through mid-animation. */
+  animation: slide-in 0.16s ease;
+}
+.drawer-body {
+  padding: 2.5rem 1.6rem 3rem;
+}
+.drawer-close {
+  position: sticky;
+  top: 0.6rem;
+  float: right;
+  margin: 0.6rem 0.6rem 0 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 6px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 1;
+}
+.drawer-close:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+/* the drawer reuses .detail styles but shouldn't add a huge top h1 margin */
+.drawer .detail-head h1 {
+  font-size: 1.5rem;
+}
+@keyframes slide-in {
+  from {
+    transform: translateX(24px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@media (max-width: 620px) {
+  .drawer-body {
+    padding: 2.5rem 1.1rem 3rem;
+  }
+}
+
+/* ---- tree connector lines (Browse › Diffusion models) ---- */
+.row-list.tree .tree-row {
+  display: flex;
+  align-items: stretch;
+  padding: 0;
+}
+.guides {
+  display: flex;
+  flex: 0 0 auto;
+}
+.guide {
+  position: relative;
+  width: 1.5rem;
+  flex: 0 0 auto;
+}
+/* vertical line down the centre of the cell */
+.guide.through::before,
+.guide.branch::before,
+.guide.last::before {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid var(--border-strong);
+}
+/* a last child's vertical line stops at the elbow */
+.guide.last::before {
+  bottom: 50%;
+}
+/* horizontal tick out to the label */
+.guide.branch::after,
+.guide.last::after {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  width: 0.75rem;
+  border-top: 1px solid var(--border-strong);
+}
+.tree-name {
+  flex: 1;
+  width: auto;
+}
+/* fixed-width slot for the collapse toggle so names stay aligned */
+.tree-toggle-cell {
+  flex: 0 0 auto;
+  width: 1.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tree-collapse {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 1rem;
+  line-height: 1;
+}
+.tree-collapse:hover {
+  color: var(--text);
+}
+
+/* ---- collapsible tree controls & node toggles ---- */
+.tree-controls {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.7rem;
+}
+.tree-toggle {
+  cursor: pointer;
+}
+.tree-toggle circle {
+  fill: var(--bg-elev-2);
+  stroke: var(--border-strong);
+}
+.tree-toggle:hover circle {
+  stroke: var(--accent);
+}
+.tree-toggle-sign {
+  fill: var(--text-dim);
+  font-size: 15px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}

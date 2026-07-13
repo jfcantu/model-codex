@@ -1,0 +1,52 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // Starts the Vite dev server (via the preLaunchTask) and opens Chrome
+      // against it with source-mapped breakpoints in src/.
+      "name": "Dev: Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5176",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "vite: dev",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:///./src/*": "${workspaceFolder}/src/*",
+        "/src/*": "${workspaceFolder}/src/*"
+      }
+    },
+    {
+      // Same, but for Microsoft Edge.
+      "name": "Dev: Edge",
+      "type": "msedge",
+      "request": "launch",
+      "url": "http://localhost:5176",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "vite: dev",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:///./src/*": "${workspaceFolder}/src/*",
+        "/src/*": "${workspaceFolder}/src/*"
+      }
+    },
+    {
+      // Attach to an already-running Chrome started with --remote-debugging-port=9222.
+      "name": "Attach: Chrome (port 9222)",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "url": "http://localhost:5176/*",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      // Debug the data-integrity script (npm run validate) in Node.
+      "name": "Debug: validate script",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/scripts/validate.mjs",
+      "cwd": "${workspaceFolder}",
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ]
+}

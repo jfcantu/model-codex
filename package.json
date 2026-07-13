@@ -1,0 +1,31 @@
+{
+  "name": "model-codex",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A browsable knowledge base of ComfyUI image-generation models: ancestry, companion requirements, and compatibility.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b --noEmit",
+    "validate": "node scripts/validate.mjs"
+  },
+  "dependencies": {
+    "d3-hierarchy": "^3.1.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@modyfi/vite-plugin-yaml": "^1.1.0",
+    "@types/d3-hierarchy": "^3.1.7",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "js-yaml": "^4.3.0",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8"
+  }
+}

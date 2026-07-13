@@ -1,0 +1,44 @@
+name: 🐛 Bug report
+description: Something is broken — the site, a link, the build/validation, or a factually broken data reference.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Issues are for bugs only.** If you want the data *changed, added, or
+        corrected* (a new model, a disputed compatibility, better settings, a
+        clearer definition), that's a **pull request**, not an issue — see
+        [CONTRIBUTING.md](https://github.com/jfcantu/model-codex/blob/main/CONTRIBUTING.md).
+        Data-change requests filed here will be closed.
+
+  - type: checkboxes
+    attributes:
+      label: This is a bug, not a data-change request
+      options:
+        - label: I'm reporting something that is broken, not asking for the data to be updated (those are pull requests).
+          required: true
+
+  - type: textarea
+    attributes:
+      label: What's broken?
+      description: What did you do, what did you expect, and what actually happened?
+      placeholder: |
+        On the Compatibility page, selecting X then Y crashes the app…
+        or: the "Flux.1" link on the Browse page 404s…
+        or: `npm run validate` fails with…
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Where?
+      description: The page, URL/hash (e.g. `#/browse?tab=vaes`), or the model/file id involved.
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Environment
+      description: Browser + OS, or the command and Node version if it's a build/validate failure.
+    validations:
+      required: false

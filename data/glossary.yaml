@@ -1,0 +1,148 @@
+# Glossary of terms used throughout the Codex, rendered alphabetically on the
+# Glossary page. `seeAlso` entries are other term names (matched case-insensitively).
+
+- term: Base model
+  definition: >
+    The first released version of an architecture — the thing later finetunes
+    are built on. Sometimes the architecture and its base model share a name.
+  examples: ["Flux.1 [dev]", "Flux.1 [schnell]"]
+  seeAlso: [Finetune]
+
+- term: Checkpoint
+  definition: >
+    In ComfyUI, an all-in-one file that bundles a diffusion model together with
+    its text encoder(s) and VAE — so one file has everything needed to generate.
+    A standalone "diffusion model" file contains just the model part, and you
+    load its text encoder and VAE separately.
+  seeAlso: [Model, Text encoder, VAE]
+
+- term: ComfyUI node
+  definition: >
+    A building block in a ComfyUI workflow. Nodes are frequently written for a
+    specific architecture; a node built for Flux.1 may fail on Chroma, which is
+    based on Flux.1 but changes its internals.
+
+- term: Finetune
+  definition: >
+    A model produced by further training an existing model on new data. It keeps
+    the parent's architecture and the same required files, but changes the look
+    and prompt behaviour. Most community models are finetunes.
+  examples: [Illustrious-XL, "NoobAI-XL (based on Illustrious)"]
+  seeAlso: [Model]
+
+- term: GGUF
+  aka: [Quantized]
+  definition: >
+    A compressed ("quantized") file format that shrinks a model or text encoder
+    so it needs less VRAM, usually with only a small quality cost. In ComfyUI it
+    requires a dedicated GGUF loader node, but once loaded it behaves exactly
+    like any other file of that type.
+  seeAlso: [Precision format]
+
+- term: LoRA
+  definition: >
+    A small add-on file that nudges a model toward a style, character, or
+    concept. A LoRA is trained against a specific model; whether it transfers to
+    another model depends mostly on how closely related the two are — and even
+    then it is not guaranteed.
+  examples: ["An Illustrious LoRA often works on NoobAI-XL", "An SDXL LoRA will not work on Flux.1"]
+
+- term: Model
+  aka: [Diffusion model]
+  definition: >
+    A concrete set of trained weights you load to generate images. When people
+    say "a model" they usually mean the diffusion model — the part that actually
+    makes the picture. (A single file that bundles the model together with its
+    text encoder and VAE is called a checkpoint.)
+  examples: [NoobAI-XL, "Flux.1 [dev]", Chroma]
+  seeAlso: [Finetune, Checkpoint]
+
+- term: Precision format
+  aka: [bf16, fp16, fp8]
+  definition: >
+    The numeric precision a file's weights are stored at (fp16, bf16, fp8, …).
+    Lower precision means a smaller file and less VRAM, sometimes at a small
+    quality cost. Files in the same workflow don't have to match — an fp8 text
+    encoder pairs fine with a bf16 model.
+  examples: [bf16, fp16, fp8_e4m3fn]
+  seeAlso: [GGUF]
+
+- term: Text encoder
+  definition: >
+    The model that turns your prompt into the numbers the diffusion model works
+    from. Different architectures use different encoders; some use two at once.
+    Text encoders are shared building blocks reused across many models.
+  examples: ["CLIP-L", "CLIP-G", "T5-XXL"]
+  seeAlso: [VAE, Checkpoint]
+
+- term: VAE
+  aka: [Autoencoder]
+  definition: >
+    The variational autoencoder that converts between pixels and the model's
+    latent space. Using the wrong VAE typically yields washed-out or corrupted
+    colour. VAEs are shared building blocks; some models accept more than one.
+  examples: ["SDXL VAE", "Flux.1 VAE", "Qwen-Image VAE"]
+  seeAlso: [Text encoder]
+
+- term: Parameters
+  aka: [4B, 8B, params]
+  definition: >
+    The number of learned weights in a model, counted in billions — "8B" means
+    8 billion. Bigger models are generally higher quality but need more VRAM and
+    run slower.
+  seeAlso: [Model]
+
+- term: Sampler
+  definition: >
+    The algorithm that removes a little noise at each step (e.g. euler,
+    dpmpp_2m, uni_pc). Different samplers trade off speed, smoothness, and how
+    deterministic the result is.
+  seeAlso: [Scheduler, Steps]
+
+- term: Scheduler
+  definition: >
+    Decides how much noise comes off at each step across the run (e.g. normal,
+    karras, simple, sgm_uniform, beta). Chosen together with the sampler.
+  seeAlso: [Sampler, Steps]
+
+- term: Steps
+  definition: >
+    How many denoising iterations the sampler runs. More steps add detail and
+    cost time, with diminishing returns; distilled models need very few (4-8).
+  seeAlso: [Sampler, Distilled]
+
+- term: CFG
+  aka: [CFG scale, Classifier-Free Guidance]
+  definition: >
+    How strongly the model is pushed to follow your prompt. Higher tracks the
+    prompt more literally but can look over-saturated or "fried"; lower is
+    looser. Typical image models use ~5-8; distilled models ignore it (set to 1).
+  seeAlso: [Guidance, Steps]
+
+- term: Guidance
+  aka: [FluxGuidance, distilled guidance]
+  definition: >
+    Distilled models like Flux bake guidance into the weights, so real CFG is
+    left at 1 and a separate "guidance" number (around 3.5 for Flux) controls
+    how closely the image follows the prompt.
+  seeAlso: [CFG, Distilled]
+
+- term: Shift
+  definition: >
+    A flow/timestep "shift" some newer models expose (via nodes like
+    ModelSamplingSD3 or ModelSamplingAuraFlow). It rebalances where the model
+    spends its denoising steps; the good value is model-specific.
+  seeAlso: [Steps, Sampler]
+
+- term: CLIP skip
+  definition: >
+    Stops using the last few layers of the CLIP text encoder. Some finetunes
+    (notably Pony) are trained expecting CLIP skip 2 and look wrong without it.
+  seeAlso: [Text encoder]
+
+- term: Distilled
+  definition: >
+    A model trained to reach a good result in far fewer steps than its parent —
+    often with real CFG disabled. Flux [schnell] and SD 3.5 Large Turbo are
+    distilled.
+  seeAlso: [Steps, Guidance]

@@ -1,0 +1,74 @@
+# VAEs. The `type` is inferred from this file (no per-entry `type:`).
+# `family` groups them on the Browse tab (usually the model brand they belong
+# to). Referenced by model `requires` lists. id must be unique across all files.
+
+- id: sd15-vae
+  name: SD 1.5 VAE
+  family: Stable Diffusion
+  origin: Stability AI
+  description: >
+    The VAE used by Stable Diffusion 1.x. The improved "ft-mse-840000" variant is
+    the one most people use.
+
+- id: sdxl-vae
+  name: SDXL VAE
+  family: Stable Diffusion
+  origin: Stability AI
+  description: The VAE used by the SDXL family (and its finetunes).
+
+- id: sd35-vae
+  name: SD 3.5 VAE
+  family: Stable Diffusion
+  origin: Stability AI
+  description: >
+    The 16-channel VAE used by Stable Diffusion 3.x / 3.5, for finer detail than
+    the older 4-channel SD/SDXL VAEs.
+
+- id: flux-vae
+  name: Flux.1 VAE
+  family: Flux
+  origin: Black Forest Labs
+  description: >
+    The VAE that comes with Flux.1. Also used by Chroma and other Flux-based
+    models.
+
+- id: flux2-vae
+  name: Flux.2 VAE
+  family: Flux
+  origin: Black Forest Labs
+  description: >
+    Flux.2's own higher-resolution VAE — a different file from the Flux.1 VAE.
+
+- id: wan21-vae
+  name: Wan 2.1 VAE
+  family: Wan
+  origin: Alibaba / Wan
+  description: The VAE from the Wan 2.1 video model.
+
+- id: wan22-vae
+  name: Wan 2.2 VAE
+  family: Wan
+  origin: Alibaba / Wan
+  description: >
+    The higher-compression VAE used by Wan 2.2's 5B (TI2V) model. The Wan 2.2
+    14B models reuse the Wan 2.1 VAE instead.
+
+- id: qwen-image-vae
+  name: Qwen-Image VAE
+  family: Qwen
+  origin: Alibaba / Qwen
+  description: The VAE from the Qwen-Image model.
+
+- id: hunyuan-video-vae
+  name: HunyuanVideo VAE
+  family: Hunyuan
+  origin: Tencent
+  description: HunyuanVideo's 3D causal video VAE (a separate file in ComfyUI).
+
+- id: ltx-video-vae
+  name: LTX-Video VAE
+  family: LTX
+  origin: Lightricks
+  description: >
+    LTX-Video's 3D video VAE. Bundled inside the classic 0.9.x checkpoint;
+    a separate file in the LTX 2.x releases.

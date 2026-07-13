@@ -1,0 +1,12 @@
+# Force people through a template; no blank "please change the data" issues.
+blank_issues_enabled: false
+contact_links:
+  - name: 📝 Change, add, or correct data (open a pull request)
+    url: https://github.com/jfcantu/model-codex/edit/main/data/models.yaml
+    about: >-
+      Want a model, compatibility, setting, or definition changed or added? That's
+      a pull request, not an issue — edit the YAML in data/ and submit it. See
+      CONTRIBUTING.md. Data-change requests filed as issues will be closed.
+  - name: 📖 Contributing guide
+    url: https://github.com/jfcantu/model-codex/blob/main/CONTRIBUTING.md
+    about: How the data model works and how to make an edit that passes validation.

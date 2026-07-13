@@ -1,0 +1,87 @@
+# Text encoders. The `type` is inferred from this file (no per-entry `type:`).
+# `family` groups them on the Browse tab (CLIP, T5, LLM). Referenced by model
+# `requires` lists. id must be unique across ALL data files.
+
+- id: clip-l
+  name: CLIP-L
+  family: CLIP
+  aliases: ["CLIP ViT-L/14"]
+  origin: OpenAI / SD
+  description: >
+    The smaller CLIP text encoder (ViT-L/14). Used by SD1.5, SDXL (alongside
+    CLIP-G), and Flux.1 (alongside T5-XXL).
+
+- id: clip-g
+  name: CLIP-G
+  family: CLIP
+  aliases: ["CLIP ViT-bigG/14", OpenCLIP-bigG]
+  origin: LAION / OpenCLIP
+  description: >
+    The larger of SDXL's two text encoders. SDXL uses CLIP-L and CLIP-G together.
+
+- id: long-clip
+  name: Long-CLIP
+  family: CLIP
+  variantOf: clip-l
+  origin: community
+  description: >
+    An extended-context version of CLIP that accepts much longer prompts. Used
+    as a drop-in replacement for CLIP-L (and CLIP-G) in some SDXL / Flux / SD3
+    workflows.
+
+- id: t5xxl
+  name: T5-XXL
+  family: T5
+  aliases: [t5]
+  origin: Google T5
+  description: >
+    A large T5 text encoder used by Flux.1, Chroma, SD3.x and others for
+    stronger prompt comprehension. Commonly shipped as fp16 or fp8 variants.
+
+- id: flan-t5-xxl
+  name: FLAN-T5-XXL
+  family: T5
+  variantOf: t5xxl
+  origin: Google T5
+  description: >
+    An instruction-tuned T5-XXL. Interchangeable with plain T5-XXL in most image
+    workflows (some models, e.g. PixArt, ship expecting this variant).
+
+- id: umt5-xxl
+  name: UMT5-XXL
+  family: T5
+  origin: Google
+  description: >
+    A multilingual T5 (UMT5) text encoder used by the Wan video models.
+
+- id: qwen25-vl
+  name: Qwen2.5-VL
+  family: LLM
+  origin: Alibaba / Qwen
+  description: >
+    The 7B Qwen2.5-VL vision-language model used as Qwen-Image's text encoder.
+    Distinct from the Qwen3 text models (e.g. the Qwen3-4B used by Z-Image).
+
+- id: qwen3-4b
+  name: Qwen3-4B
+  family: LLM
+  origin: Alibaba / Qwen
+  description: >
+    The 4B Qwen3 text model used by Z-Image. A plain text LLM, distinct from
+    Qwen-Image's Qwen2.5-VL vision-language encoder.
+
+- id: mistral-3
+  name: Mistral Small 3.1
+  family: LLM
+  origin: Mistral AI
+  description: >
+    A 24B vision-language model — Flux.2's single text encoder, replacing
+    Flux.1's CLIP-L + T5-XXL pair.
+
+- id: llava-llama3
+  name: LLaVA-Llama-3-8B
+  family: LLM
+  origin: Tencent / community
+  description: >
+    A LLaVA (vision-language) model built on Llama-3-8B, used as HunyuanVideo's
+    primary text encoder alongside CLIP-L.
